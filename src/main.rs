@@ -6,33 +6,26 @@ use axum::{
 use std::sync::{Arc, Mutex};
 
 use task_flow_api::{
-    handlers::{
-        create_patient, create_visit, delete_patient, find_patient, get_all_patients, hello,
-        patients_visit, update_patient_details, visits,
-    },
-    state::{AppState, DB},
+    db::create_pool,
+    handlers::{create_patient, get_all_patients},
 };
 
 #[tokio::main]
 async fn main() {
-    let app_state = AppState {
-        patients: Vec::new(),
-        visits: Vec::new(),
-    };
+    dotenvy::dotenv().ok();
 
-    let db: DB = Arc::new(Mutex::new(app_state));
+    let pool = create_pool().await;
 
     let app = Router::new()
-        .route("/", get(hello))
         .route("/patients", post(create_patient))
         .route("/patients", get(get_all_patients))
-        .route("/patients/{id}", get(find_patient))
-        .route("/patients/{id}", put(update_patient_details))
-        .route("/patients/{id}", delete(delete_patient))
-        .route("/patients/{id}/visits", post(create_visit))
-        .route("/visits", get(visits))
-        .route("/patient/{id}/visit", get(patients_visit))
-        .with_state(db);
+        // .route("/patients/{id}", get(find_patient))
+        // .route("/patients/{id}", put(update_patient_details))
+        // .route("/patients/{id}", delete(delete_patient))
+        // .route("/patients/{id}/visits", post(create_visit))
+        // .route("/visits", get(visits))
+        // .route("/patient/{id}/visit", get(patients_visit))
+        .with_state(pool);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
         .await

@@ -1,0 +1,48 @@
+warning: unused import: `visit_handlers::*`
+ --> src/handlers/mod.rs:5:9
+  |
+5 | pub use visit_handlers::*;
+  |         ^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused import: `crate::models::Patient`
+ --> src/repository/patient_repository.rs:1:5
+  |
+1 | use crate::models::Patient;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `axum::http::StatusCode`
+ --> src/services/patient_service.rs:1:5
+  |
+1 | use axum::http::StatusCode;
+  |     ^^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused import: `Visit`
+ --> src/services/patient_service.rs:5:38
+  |
+5 |     models::{CreatePatient, Patient, Visit},
+  |                                      ^^^^^
+
+warning: `task_flow_api` (lib) generated 4 warnings (run `cargo fix --lib -p task_flow_api` to apply 4 suggestions)
+warning: unused imports: `delete`, `get`, and `put`
+ --> src/main.rs:3:15
+  |
+3 |     routing::{delete, get, post, put},
+  |               ^^^^^^  ^^^        ^^^
+  |
+  = note: `#[warn(unused_imports)]` on by default
+
+warning: unused imports: `Arc` and `Mutex`
+ --> src/main.rs:6:17
+  |
+6 | use std::sync::{Arc, Mutex};
+  |                 ^^^  ^^^^^
+
+warning: `task_flow_api` (bin "task_flow_api") generated 2 warnings (run `cargo fix --bin "task_flow_api"` to apply 2 suggestions)
+    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.29s
+     Running `target/debug/task_flow_api`
+
+thread 'main' panicked at src/main.rs:36:10:
+called `Result::unwrap()` on an `Err` value: Os { code: 48, kind: AddrInUse, message: "Address already in use" }
+note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace
