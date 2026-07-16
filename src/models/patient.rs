@@ -19,3 +19,9 @@ pub struct CreatePatient {
     pub email: String,
     pub contact: String,
 }
+
+#[derive(Debug, Deserialize, Serialize, Clone)]
+pub struct UpdatePatient {
+    pub email: String,
+    pub contact: String,
+}

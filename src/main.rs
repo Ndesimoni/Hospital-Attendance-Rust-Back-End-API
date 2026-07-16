@@ -7,7 +7,7 @@ use std::sync::{Arc, Mutex};
 
 use task_flow_api::{
     db::create_pool,
-    handlers::{create_patient, get_all_patients},
+    handlers::{create_patients, get_all_patients, get_patients_by_id, update_patients_detail},
 };
 
 #[tokio::main]
@@ -17,10 +17,10 @@ async fn main() {
     let pool = create_pool().await;
 
     let app = Router::new()
-        .route("/patients", post(create_patient))
         .route("/patients", get(get_all_patients))
-        // .route("/patients/{id}", get(find_patient))
-        // .route("/patients/{id}", put(update_patient_details))
+        .route("/patients/{id}", get(get_patients_by_id))
+        .route("/patients", post(create_patients))
+        .route("/patients/{id}", put(update_patients_detail))
         // .route("/patients/{id}", delete(delete_patient))
         // .route("/patients/{id}/visits", post(create_visit))
         // .route("/visits", get(visits))
