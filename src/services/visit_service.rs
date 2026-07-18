@@ -56,3 +56,38 @@
 
 //     Ok(patients_visits)
 // }
+
+use std::sync::Arc;
+
+use crate::{
+    models::{CreateVisit, NewVisit, Visit},
+    repository::{self, visit_repository::VisitRepository},
+};
+
+pub struct VisitService {
+    repository: Arc<dyn VisitRepository>,
+}
+
+impl VisitService {
+    pub fn new(repository: Arc<dyn VisitRepository>) -> Self {
+        Self { repository }
+    }
+
+    pub async fn create_visit_services(
+        &self,
+        patient_id: i32,
+        payload: CreateVisit,
+    ) -> Result<Visit, sqlx::Error> {
+        //todo check it there is already a patient that exist
+        //todo we still have to convert this CreateVisit to Visit
+
+        let payload = NewVisit {
+            patient_id,
+            symptoms: payload.symptoms,
+            diagnosis: String::from("fever"),
+            medication: vec!["panadol".to_string()],
+        };
+
+        self.repository.create_visit_trait(payload).await
+    }
+}

@@ -1,5 +1,6 @@
 use crate::models::{CreateVisit, NewVisit, Visit};
 
+#[async_trait::async_trait]
 pub trait VisitRepository: Send + Sync {
     async fn create_visit_trait(&self, payload: NewVisit) -> Result<Visit, sqlx::Error>;
 

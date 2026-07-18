@@ -6,7 +6,7 @@ use crate::{
     repository::{patient_repository::PatientRepository, visit_repository::VisitRepository},
 };
 
-struct PostgresVisitRepository {
+pub struct PostgresVisitRepository {
     pool: PgPool,
 }
 
