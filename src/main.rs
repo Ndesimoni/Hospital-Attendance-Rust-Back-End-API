@@ -8,13 +8,24 @@ use std::sync::{Arc, Mutex};
 use task_flow_api::{
     db::create_pool,
     handlers::{create_patients, get_all_patients, get_patients_by_id, update_patients_detail},
+    repository::{
+        self, patient_repository::PatientRepository,
+        postgres_patient_repository::PostgresPatientRepository,
+    },
+    services::patient_service::PatientService,
 };
 
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
-
     let pool = create_pool().await;
+
+    let repository = Arc::new(PostgresPatientRepository::new(pool));
+
+    let repository: Arc<dyn PatientRepository> = repository;
+
+    // 3. Create service and inject repository
+    let patient_service = Arc::new(PatientService::new(repository));
 
     let app = Router::new()
         .route("/patients", get(get_all_patients))
@@ -25,7 +36,7 @@ async fn main() {
         // .route("/patients/{id}/visits", post(create_visit))
         // .route("/visits", get(visits))
         // .route("/patient/{id}/visit", get(patients_visit))
-        .with_state(pool);
+        .with_state(patient_service);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
         .await
