@@ -61,16 +61,24 @@ use std::sync::Arc;
 
 use crate::{
     models::{CreateVisit, NewVisit, Visit},
-    repository::{self, visit_repository::VisitRepository},
+    repository::{self, patient_repository::PatientRepository, visit_repository::VisitRepository},
+    services::diagnosis_services::diagnosis_services,
 };
 
 pub struct VisitService {
-    repository: Arc<dyn VisitRepository>,
+    visit_repository: Arc<dyn VisitRepository>,
+    patient_repository: Arc<dyn PatientRepository>,
 }
 
 impl VisitService {
-    pub fn new(repository: Arc<dyn VisitRepository>) -> Self {
-        Self { repository }
+    pub fn new(
+        visit_repository: Arc<dyn VisitRepository>,
+        patient_repository: Arc<dyn PatientRepository>,
+    ) -> Self {
+        Self {
+            visit_repository,
+            patient_repository,
+        }
     }
 
     pub async fn create_visit_services(
@@ -79,15 +87,28 @@ impl VisitService {
         payload: CreateVisit,
     ) -> Result<Visit, sqlx::Error> {
         //todo check it there is already a patient that exist
+
+        let patient_exist = self
+            .patient_repository
+            .get_patients_by_id_trait(patient_id)
+            .await?;
+
+        match patient_exist {
+            Some(patient) => patient,
+            None => return Err(sqlx::Error::RowNotFound),
+        };
+
+        let diagnosis = diagnosis_services(&payload.symptoms);
+
         //todo we still have to convert this CreateVisit to Visit
 
         let payload = NewVisit {
             patient_id,
             symptoms: payload.symptoms,
-            diagnosis: String::from("fever"),
-            medication: vec!["panadol".to_string()],
+            diagnosis: diagnosis.diagnosis,
+            medication: diagnosis.medication,
         };
 
-        self.repository.create_visit_trait(payload).await
+        self.visit_repository.create_visit_trait(payload).await
     }
 }

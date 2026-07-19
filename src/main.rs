@@ -28,21 +28,26 @@ async fn main() {
     let pool = create_pool().await;
 
     //*for working with patients data
-    let repository = Arc::new(PostgresPatientRepository::new(pool.clone()));
+    let patient_repository = Arc::new(PostgresPatientRepository::new(pool.clone()));
 
-    let repository: Arc<dyn PatientRepository> = repository;
+    let patient_repository: Arc<dyn PatientRepository> = patient_repository;
 
-    // Create service and inject repository
-    let patient_service = Arc::new(PatientService::new(repository));
+    // Create patient and inject repository
 
-    //*for working with visit data
+    let patient_service = Arc::new(PatientService::new(patient_repository.clone()));
+
+    //* for working with visit data
     let visit_repository = Arc::new(PostgresVisitRepository::new(pool.clone()));
 
     let visit_repository: Arc<dyn VisitRepository> = visit_repository;
 
-    //Create visit and inject repository
-    let visit_service = Arc::new(VisitService::new(visit_repository));
+    // Create visit and inject repository
+    let visit_service = Arc::new(VisitService::new(
+        visit_repository,
+        patient_repository.clone(),
+    ));
 
+    //* app state
     let app_state = AppState {
         patient_service,
         visit_service,
