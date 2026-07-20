@@ -5,7 +5,7 @@ use sqlx::PgPool;
 
 use crate::{
     models::{CreatePatient, Patient, UpdatePatient, Visit},
-    repository::{
+    repositories::{
         patient_repository::PatientRepository,
         postgres_patient_repository::PostgresPatientRepository,
     },

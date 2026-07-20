@@ -1,7 +1,7 @@
 pub mod db;
 pub mod handlers;
 pub mod models;
-pub mod repository;
+pub mod repositories;
 pub mod services;
 
 pub mod state;

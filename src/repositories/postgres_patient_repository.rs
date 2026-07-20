@@ -1,6 +1,6 @@
 use crate::{
     models::{CreatePatient, Patient, UpdatePatient},
-    repository::patient_repository::PatientRepository,
+    repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
 use axum::http::StatusCode;

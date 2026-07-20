@@ -8,7 +8,7 @@ use std::sync::Arc;
 
 use crate::{
     models::{CreatePatient, Patient, UpdatePatient},
-    repository::{
+    repositories::{
         self, patient_repository::PatientRepository,
         postgres_patient_repository::PostgresPatientRepository,
     },

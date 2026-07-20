@@ -1,6 +1,6 @@
 use axum::{
     Router,
-    routing::{delete, get, post, put},
+    routing::{delete, get, post, post_service, put},
 };
 
 use std::sync::Arc;
@@ -8,9 +8,10 @@ use std::sync::Arc;
 use task_flow_api::{
     db::create_pool,
     handlers::{
-        create_patients, create_visit, get_all_patients, get_patients_by_id, update_patients_detail,
+        create_patients, create_visit, get_all_patients, get_all_visits, get_patient_visit,
+        get_patients_by_id, update_patients_detail, update_visit,
     },
-    repository::{
+    repositories::{
         patient_repository::PatientRepository,
         postgres_patient_repository::PostgresPatientRepository,
         postgres_visit_repository::PostgresVisitRepository,
@@ -33,7 +34,6 @@ async fn main() {
     let patient_repository: Arc<dyn PatientRepository> = patient_repository;
 
     // Create patient and inject repository
-
     let patient_service = Arc::new(PatientService::new(patient_repository.clone()));
 
     //* for working with visit data
@@ -59,9 +59,9 @@ async fn main() {
         .route("/patients", post(create_patients))
         .route("/patients/{id}", put(update_patients_detail))
         .route("/patients/{id}/visits", post(create_visit))
-        // .route("/patients/{id}", delete(delete_patient))
-        // .route("/visits", get(visits))
-        // .route("/patient/{id}/visit", get(patients_visit))
+        .route("/visits", get(get_all_visits))
+        .route("/patients/{id}/visits", get(get_patient_visit))
+        .route("/visits/{id}", put(update_visit))
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")

@@ -21,3 +21,10 @@ pub struct NewVisit {
     pub diagnosis: String,
     pub medication: Vec<String>,
 }
+
+#[derive(Debug, Serialize, Deserialize, Clone)]
+pub struct UpdateVisit {
+    pub symptoms: Vec<String>,
+    pub diagnosis: String,
+    pub medication: Vec<String>,
+}
