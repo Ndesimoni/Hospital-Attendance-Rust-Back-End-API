@@ -118,6 +118,4 @@ impl VisitRepository for PostgresVisitRepository {
         .await?;
         Ok(visits)
     }
-
-
 }

@@ -8,16 +8,20 @@ use std::sync::Arc;
 use task_flow_api::{
     db::create_pool,
     handlers::{
-        create_patients, create_visit, get_all_patients, get_all_visits, get_patient_visit,
-        get_patients_by_id, update_patients_detail, update_visit,
+        auth_handler, create_patients, create_visit, get_all_patients, get_all_visits,
+        get_patient_visit, get_patients_by_id, update_patients_detail, update_visit,
     },
     repositories::{
+        auth_repository::AuthRepository,
         patient_repository::PatientRepository,
+        postgres_auth_repository::PostgresAuthRepository,
         postgres_patient_repository::PostgresPatientRepository,
         postgres_visit_repository::PostgresVisitRepository,
         visit_repository::{self, VisitRepository},
     },
-    services::{patient_service::PatientService, visit_service::VisitService},
+    services::{
+        auth_service::AuthService, patient_service::PatientService, visit_service::VisitService,
+    },
     state::AppState,
 };
 
@@ -36,6 +40,7 @@ async fn main() {
     // Create patient and inject repository
     let patient_service = Arc::new(PatientService::new(patient_repository.clone()));
 
+    ///////////////////////////////////////
     //* for working with visit data
     let visit_repository = Arc::new(PostgresVisitRepository::new(pool.clone()));
 
@@ -47,10 +52,18 @@ async fn main() {
         patient_repository.clone(),
     ));
 
+    //////////////////////////
+    let auth_repository = Arc::new(PostgresAuthRepository::new(pool.clone()));
+
+    let auth_repository: Arc<dyn AuthRepository> = auth_repository;
+
+    let auth_service = Arc::new(AuthService::new(auth_repository.clone()));
+
     //* app state
     let app_state = AppState {
         patient_service,
         visit_service,
+        auth_service,
     };
 
     let app = Router::new()
@@ -62,6 +75,7 @@ async fn main() {
         .route("/visits", get(get_all_visits))
         .route("/patients/{id}/visits", get(get_patient_visit))
         .route("/visits/{id}", put(update_visit))
+        .route("/create_user", post(auth_handler))
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")

@@ -1,7 +1,7 @@
-use crate::models::{CreateUsers, Users};
+use crate::models::{CreateUser, RegisterRequest, Users};
 
-pub trait AuthRepository {
-    pub async fn create_user_auth_trait(&self, payload: CreateUsers) -> Result<Users, sqlx::Error>;
-    pub async fn find_user_by_email_trait(&self, email: &str)
-    -> Result<Option<Users>, sqlx::Error>;
+#[async_trait::async_trait]
+pub trait AuthRepository: Send + Sync {
+    async fn create_user_trait(&self, payload: CreateUser) -> Result<Users, sqlx::Error>;
+    async fn find_user_by_email_trait(&self, email: &str) -> Result<Option<Users>, sqlx::Error>;
 }
