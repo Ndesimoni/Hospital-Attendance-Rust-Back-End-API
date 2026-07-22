@@ -18,3 +18,4 @@ dotenvy = "0.15"
 async-trait = "0.1"
 chrono = { version = "0.4", features = ["serde"] }
 bcrypt = "0.19.2"
+jsonwebtoken = {version="10.2.0",features = ["rust_crypto"]}

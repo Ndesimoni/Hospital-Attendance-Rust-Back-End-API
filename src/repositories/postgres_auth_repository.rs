@@ -2,7 +2,7 @@ use async_trait::async_trait;
 use sqlx::PgPool;
 
 use crate::{
-    models::{CreateUser, RegisterRequest, Users},
+    models::{CreateUser, Users},
     repositories::auth_repository::AuthRepository,
 };
 

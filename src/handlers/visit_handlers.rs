@@ -67,17 +67,3 @@ pub async fn update_visit(
         None => return Err(StatusCode::NOT_FOUND),
     }
 }
-
-// pub async fn update_visit(
-//     State(state): State<AppState>,
-//     Path(id): Path<i32>,
-//     Json(payload): Json<UpdateVisit>,
-// ) -> Result<Json<Visit>, StatusCode> {
-//     let visit = state
-//         .visit_service
-//         .update_visit_service(id, payload)
-//         .await
-//         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-
-//     Ok(Json(visit))
-// }
