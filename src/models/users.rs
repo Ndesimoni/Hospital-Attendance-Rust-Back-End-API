@@ -1,6 +1,8 @@
 use chrono::NaiveDateTime;
 use serde::{Deserialize, Serialize};
 
+use crate::models::Roles;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Users {
     pub id: i32,
@@ -8,7 +10,7 @@ pub struct Users {
 
     #[serde(skip_serializing)]
     pub password_hash: String,
-
+    pub role: Roles,
     pub created_at: NaiveDateTime,
 }
 

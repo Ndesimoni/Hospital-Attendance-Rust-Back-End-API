@@ -26,6 +26,7 @@ impl AuthRepository for PostgresAuthRepository {
                 id,
                 email,
                 password_hash,
+                role,
                 created_at
             FROM users
             WHERE email = $1
@@ -53,6 +54,7 @@ impl AuthRepository for PostgresAuthRepository {
              id,
              email,
              password_hash,
+             role,
              created_at
         "#,
             payload.email,

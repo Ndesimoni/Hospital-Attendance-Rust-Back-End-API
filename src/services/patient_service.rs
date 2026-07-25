@@ -45,6 +45,8 @@ impl PatientService {
         id: i32,
         payload: UpdatePatient,
     ) -> Result<Option<Patient>, sqlx::Error> {
-     self.repository.update_patients_detail_trait(id, payload).await
+        self.repository
+            .update_patients_detail_trait(id, payload)
+            .await
     }
 }

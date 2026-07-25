@@ -23,7 +23,6 @@ use crate::{
 };
 
 ////////////////////////////////////////////////////////
-///
 
 //*get all patients */
 pub async fn get_all_patients(

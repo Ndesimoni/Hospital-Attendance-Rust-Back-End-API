@@ -69,11 +69,9 @@ impl AuthService {
 
         let secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
 
-        let create_token = create_token(user.id, user.email.clone(), &secret)
+        let token = create_token(user.id, user.email.clone(), user.role, &secret)
             .map_err(|_| "Token creation failed".to_string())?;
 
-        Ok(LoginResponse {
-            token: create_token,
-        })
+        Ok(LoginResponse { token })
     }
 }

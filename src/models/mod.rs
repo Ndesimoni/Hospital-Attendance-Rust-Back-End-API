@@ -1,8 +1,13 @@
 mod auth;
+mod claims;
 mod patient;
+mod role;
 mod users;
 mod visit;
+
 pub use auth::{LoginRequest, LoginResponse, RegisterRequest};
+pub use claims::Claims;
 pub use patient::{CreatePatient, Patient, UpdatePatient};
+pub use role::{CreateUserRole, Roles, UserRoleCreated};
 pub use users::{CreateUser, Users};
 pub use visit::{CreateVisit, NewVisit, UpdateVisit, Visit};
