@@ -25,6 +25,15 @@ pub struct UserRoleCreated {
     pub role: Roles,
 }
 
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateUserPasswordBeforeHash {
+    pub password: String,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct UpdateUserPasswordAfterHash {
+    pub password_hash: String,
+}
 //*converting from enum to string so we can store in postgressql */
 impl fmt::Display for Roles {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

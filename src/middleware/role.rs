@@ -2,7 +2,6 @@ use axum::{extract::Request, http::StatusCode, middleware::Next, response::Respo
 
 use crate::models::{Claims, Roles};
 
-
 pub async fn require_doctor(request: Request, next: Next) -> Result<Response, StatusCode> {
     let claim = request
         .extensions()
@@ -47,8 +46,6 @@ pub async fn require_admin(request: Request, next: Next) -> Result<Response, Sta
         .extensions()
         .get::<Claims>()
         .ok_or(StatusCode::UNAUTHORIZED)?;
-
-    println!("ADMIN CLAIM: {:?}", claim);
 
     if claim.role != Roles::Admin {
         return Err(StatusCode::FORBIDDEN);

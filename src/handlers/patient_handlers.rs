@@ -42,7 +42,7 @@ pub async fn get_patients_by_id(
     State(state): State<AppState>,
     Path(id): Path<i32>,
 ) -> Result<Json<Patient>, StatusCode> {
-    println!("✅ get_patient_by_id handler called");
+  
 
     let patient = state
         .patient_service
@@ -62,8 +62,6 @@ pub async fn create_patients(
     State(state): State<AppState>,
     Json(payload): Json<CreatePatient>,
 ) -> Result<Json<Patient>, StatusCode> {
-    println!("hitting the created patient handler");
-
     let patient = state
         .patient_service
         .create_patients_service(payload)
@@ -79,8 +77,6 @@ pub async fn update_patients_detail(
     Path(id): Path<i32>,
     Json(payload): Json<UpdatePatient>,
 ) -> Result<Json<Patient>, StatusCode> {
-    println!("api hitting the update route handler");
-
     let patient = state
         .patient_service
         .update_patient_details_service(id, payload)

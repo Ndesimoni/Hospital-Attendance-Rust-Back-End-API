@@ -17,8 +17,6 @@ pub async fn create_visit(
     Path(patient_id): Path<i32>,
     Json(payload): Json<CreateVisit>,
 ) -> Result<Json<Visit>, StatusCode> {
-    println!("request hitting the create visit handler");
-
     let visit = state
         .visit_service
         .create_visit_services(patient_id, payload)

@@ -2,7 +2,9 @@ use std::sync::Arc;
 
 use crate::{
     models::{CreateVisit, NewVisit, UpdateVisit, Visit},
-    repositories::{self, patient_repository::PatientRepository, visit_repository::VisitRepository},
+    repositories::{
+        self, patient_repository::PatientRepository, visit_repository::VisitRepository,
+    },
     services::diagnosis_services::diagnosis_services,
 };
 

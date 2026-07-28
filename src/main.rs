@@ -8,8 +8,9 @@ use std::sync::Arc;
 use task_flow_api::{
     db::create_pool,
     handlers::{
-        auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_visits,
-        get_patient_visit, get_patients_by_id, login, update_patients_detail, update_visit,
+        auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_user,
+        get_all_visits, get_patient_visit, get_patients_by_id, login, update_patients_detail,
+        update_user, update_visit,
     },
     middleware::{
         auth::auth_middleware,
@@ -130,7 +131,8 @@ async fn main() {
     //* admin only routes */
     let admin_route = Router::new()
         .route("/users", post(create_user))
-        // .route("/users/:id", put(update_user))
+        .route("/users/{id}", put(update_user))
+        .route("/users", get(get_all_user))
         // .route("/users/:id", delete(delete_user))
         .route_layer(middleware::from_fn(require_admin))
         .layer(middleware::from_fn_with_state(
@@ -154,12 +156,3 @@ async fn main() {
 
     axum::serve(listener, app).await.unwrap();
 }
-
-// use bcrypt::{DEFAULT_COST, hash, verify};
-// fn main() {
-//     let password = "12345";
-
-//     let password_hash = hash(password, DEFAULT_COST).unwrap();
-
-//     println!("{}", password_hash)
-// }

@@ -8,9 +8,8 @@ pub trait VisitRepository: Send + Sync {
 
     async fn get_a_patient_visits_trait(&self, id: i32) -> Result<Vec<Visit>, sqlx::Error>;
 
-    //todo implement this trait so i check if patient exist before 
+    //todo implement this trait so i check if patient exist before
     // async fn get_visit_by_id(&self, id: i32) -> Result<Option<Visit>, sqlx::Error>;
-
 
     async fn update_a_visit_trait(
         &self,

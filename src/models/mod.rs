@@ -8,6 +8,9 @@ mod visit;
 pub use auth::{LoginRequest, LoginResponse, RegisterRequest};
 pub use claims::Claims;
 pub use patient::{CreatePatient, Patient, UpdatePatient};
-pub use role::{CreateUserRole, Roles, UserRoleCreated};
+pub use role::{
+    CreateUserRole, Roles, UpdateUserPasswordAfterHash, UpdateUserPasswordBeforeHash,
+    UserRoleCreated,
+};
 pub use users::{CreateUser, Users};
 pub use visit::{CreateVisit, NewVisit, UpdateVisit, Visit};
