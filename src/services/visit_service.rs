@@ -1,10 +1,9 @@
 use std::sync::Arc;
 
 use crate::{
+    errors::AppError,
     models::{CreateVisit, NewVisit, UpdateVisit, Visit},
-    repositories::{
-        self, patient_repository::PatientRepository, visit_repository::VisitRepository,
-    },
+    repositories::{patient_repository::PatientRepository, visit_repository::VisitRepository},
     services::diagnosis_services::diagnosis_services,
 };
 
@@ -29,18 +28,13 @@ impl VisitService {
         &self,
         patient_id: i32,
         payload: CreateVisit,
-    ) -> Result<Visit, sqlx::Error> {
+    ) -> Result<Visit, AppError> {
         //todo check it there is already a patient that exist
 
-        let patient_exist = self
-            .patient_repository
+        self.patient_repository
             .get_patients_by_id_trait(patient_id)
-            .await?;
-
-        match patient_exist {
-            Some(patient) => patient,
-            None => return Err(sqlx::Error::RowNotFound),
-        };
+            .await?
+            .ok_or(AppError::NotFound)?;
 
         let diagnosis = diagnosis_services(&payload.symptoms);
 
@@ -57,17 +51,16 @@ impl VisitService {
     }
 
     //* get all visits */
-    pub async fn get_all_visit_service(&self) -> Result<Vec<Visit>, sqlx::Error> {
+    pub async fn get_all_visit_service(&self) -> Result<Vec<Visit>, AppError> {
         self.visit_repository.get_all_visits_trait().await
     }
 
     //* get a patient visits */
-    pub async fn get_patient_visit_service(&self, id: i32) -> Result<Vec<Visit>, sqlx::Error> {
-        let patient = self
-            .patient_repository
+    pub async fn get_patient_visit_service(&self, id: i32) -> Result<Vec<Visit>, AppError> {
+        self.patient_repository
             .get_patients_by_id_trait(id)
             .await?
-            .ok_or(sqlx::Error::RowNotFound);
+            .ok_or(AppError::NotFound)?;
 
         let visits = self.visit_repository.get_a_patient_visits_trait(id).await?;
 
@@ -78,13 +71,14 @@ impl VisitService {
         &self,
         id: i32,
         payload: UpdateVisit,
-    ) -> Result<Option<Visit>, sqlx::Error> {
+    ) -> Result<Visit, AppError> {
         //todo check if visit exist first before updating it
 
         let updated_visit = self
             .visit_repository
             .update_a_visit_trait(id, payload)
-            .await?;
+            .await?
+            .ok_or(AppError::NotFound)?;
 
         Ok(updated_visit)
     }

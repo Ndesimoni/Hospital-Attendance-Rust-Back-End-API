@@ -3,6 +3,7 @@ use axum::http::StatusCode;
 use sqlx::PgPool;
 
 use crate::{
+    errors::AppError,
     models::{CreateVisit, NewVisit, UpdateVisit, Visit},
     repositories::{patient_repository::PatientRepository, visit_repository::VisitRepository},
 };
@@ -19,7 +20,7 @@ impl PostgresVisitRepository {
 
 #[async_trait]
 impl VisitRepository for PostgresVisitRepository {
-    async fn create_visit_trait(&self, payload: NewVisit) -> Result<Visit, sqlx::Error> {
+    async fn create_visit_trait(&self, payload: NewVisit) -> Result<Visit, AppError> {
         let create_visit = sqlx::query_as!(
             Visit,
             r#"
@@ -44,7 +45,7 @@ impl VisitRepository for PostgresVisitRepository {
         Ok(create_visit)
     }
 
-    async fn get_all_visits_trait(&self) -> Result<Vec<Visit>, sqlx::Error> {
+    async fn get_all_visits_trait(&self) -> Result<Vec<Visit>, AppError> {
         let visits = sqlx::query_as!(
             Visit,
             r#"
@@ -64,7 +65,7 @@ impl VisitRepository for PostgresVisitRepository {
         Ok(visits)
     }
 
-    async fn get_a_patient_visits_trait(&self, patient_id: i32) -> Result<Vec<Visit>, sqlx::Error> {
+    async fn get_a_patient_visits_trait(&self, patient_id: i32) -> Result<Vec<Visit>, AppError> {
         let visits = sqlx::query_as!(
             Visit,
             r#"
@@ -92,7 +93,7 @@ impl VisitRepository for PostgresVisitRepository {
         &self,
         id: i32,
         payload: UpdateVisit,
-    ) -> Result<Option<Visit>, sqlx::Error> {
+    ) -> Result<Option<Visit>, AppError> {
         let visits = sqlx::query_as!(
             Visit,
             r#"

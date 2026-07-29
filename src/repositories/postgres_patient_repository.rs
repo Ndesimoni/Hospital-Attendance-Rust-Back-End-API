@@ -1,4 +1,5 @@
 use crate::{
+    errors::AppError,
     models::{CreatePatient, Patient, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
@@ -21,7 +22,7 @@ impl PostgresPatientRepository {
 
 #[async_trait]
 impl PatientRepository for PostgresPatientRepository {
-    async fn get_all_patients_trait(&self) -> Result<Vec<Patient>, sqlx::Error> {
+    async fn get_all_patients_trait(&self) -> Result<Vec<Patient>, AppError> {
         let patient = sqlx::query_as!(
             Patient,
             r#"
@@ -42,7 +43,7 @@ impl PatientRepository for PostgresPatientRepository {
     }
 
     //get patient repo
-    async fn get_patients_by_id_trait(&self, id: i32) -> Result<Option<Patient>, sqlx::Error> {
+    async fn get_patients_by_id_trait(&self, id: i32) -> Result<Option<Patient>, AppError> {
         let patient = sqlx::query_as!(
             Patient,
             r#"
@@ -66,7 +67,7 @@ impl PatientRepository for PostgresPatientRepository {
         Ok(patient)
     }
 
-    async fn create_patients_trait(&self, payload: CreatePatient) -> Result<Patient, sqlx::Error> {
+    async fn create_patients_trait(&self, payload: CreatePatient) -> Result<Patient, AppError> {
         let patients = sqlx::query_as!(
             Patient,
             r#"
@@ -103,7 +104,7 @@ impl PatientRepository for PostgresPatientRepository {
         &self,
         id: i32,
         payload: UpdatePatient,
-    ) -> Result<Option<Patient>, sqlx::Error> {
+    ) -> Result<Option<Patient>, AppError> {
         let patient = sqlx::query_as!(
             Patient,
             r#"

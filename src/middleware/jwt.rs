@@ -11,7 +11,10 @@ use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode}
 
 use serde::{Deserialize, Serialize};
 
-use crate::models::{Claims, Roles};
+use crate::{
+    errors::AppError,
+    models::{Claims, Roles},
+};
 
 //////////////////////////////////////
 
@@ -21,7 +24,7 @@ pub fn create_token(
     email: String,
     role: Roles,
     secret: &str,
-) -> Result<String, jsonwebtoken::errors::Error> {
+) -> Result<String, AppError> {
     let expiration = Utc::now()
         .checked_add_signed(Duration::hours(1))
         .unwrap()
@@ -44,7 +47,7 @@ pub fn create_token(
 }
 
 //*verifying the the jwt token that was created*/
-pub fn verify_token(token: &str, secret: &str) -> Result<Claims, jsonwebtoken::errors::Error> {
+pub fn verify_token(token: &str, secret: &str) -> Result<Claims, AppError> {
     let token_data = decode::<Claims>(
         token,
         &DecodingKey::from_secret(secret.as_bytes()),

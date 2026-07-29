@@ -2,6 +2,7 @@ use async_trait::async_trait;
 use sqlx::PgPool;
 
 use crate::{
+    errors::AppError,
     models::{CreateUser, Users},
     repositories::auth_repository::AuthRepository,
 };
@@ -18,7 +19,7 @@ impl PostgresAuthRepository {
 
 #[async_trait]
 impl AuthRepository for PostgresAuthRepository {
-    async fn find_user_by_email_trait(&self, email: &str) -> Result<Option<Users>, sqlx::Error> {
+    async fn find_user_by_email_trait(&self, email: &str) -> Result<Option<Users>, AppError> {
         let user = sqlx::query_as!(
             Users,
             r#"
@@ -39,7 +40,7 @@ impl AuthRepository for PostgresAuthRepository {
         Ok(user)
     }
 
-    async fn create_user_trait(&self, payload: CreateUser) -> Result<Users, sqlx::Error> {
+    async fn create_user_trait(&self, payload: CreateUser) -> Result<Users, AppError> {
         let user = sqlx::query_as!(
             Users,
             r#"
