@@ -6,6 +6,7 @@ use axum::{
 };
 
 use serde_json::json;
+use validator::ValidationErrors;
 
 pub enum AppError {
     NotFound,
@@ -13,6 +14,7 @@ pub enum AppError {
     Forbidden,
     BadRequest(String),
     Conflict(String),
+    Validation(ValidationErrors),
     InternalServerError,
 }
 
@@ -33,6 +35,29 @@ impl IntoResponse for AppError {
                 StatusCode::INTERNAL_SERVER_ERROR,
                 "Internal server error".to_string(),
             ),
+
+            AppError::Validation(errors) => {
+                let fields = errors
+                    .field_errors()
+                    .into_iter()
+                    .map(|(field, errors)| {
+                        let message = errors
+                            .first()
+                            .and_then(|error| error.message.as_ref())
+                            .map(|message| message.to_string())
+                            .unwrap_or_else(|| "Invalid value".to_string());
+
+                        (field.to_string(), message)
+                    })
+                    .collect::<std::collections::HashMap<_, _>>();
+
+                let body = json!({
+                    "error": "Validation failed",
+                    "fields": fields
+                });
+
+                return (StatusCode::BAD_REQUEST, axum::Json(body)).into_response();
+            }
         };
 
         let body = json!({
@@ -76,5 +101,17 @@ impl From<jsonwebtoken::errors::Error> for AppError {
     fn from(error: jsonwebtoken::errors::Error) -> Self {
         eprintln!("Jwt error {:?}", error);
         AppError::InternalServerError
+    }
+}
+
+// impl From<ValidationErrors> for AppError {
+//     fn from(error: ValidationErrors) -> Self {
+//         AppError::BadRequest(error.to_string())
+//     }
+// }
+
+impl From<ValidationErrors> for AppError {
+    fn from(error: ValidationErrors) -> Self {
+        AppError::Validation(error)
     }
 }

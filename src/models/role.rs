@@ -2,6 +2,9 @@ use std::fmt;
 
 use serde::{Deserialize, Serialize};
 use sqlx::Type;
+use validator::Validate;
+
+use crate::validation::validate_password;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, Clone)]
 pub enum Roles {
@@ -11,9 +14,12 @@ pub enum Roles {
     Admin,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Validate)]
 pub struct CreateUserRole {
+    #[validate(email)]
     pub email: String,
+
+    #[validate(length(min = 8), custom(function = "validate_password"))]
     pub password: String,
     pub role: Roles,
 }
@@ -25,8 +31,9 @@ pub struct UserRoleCreated {
     pub role: Roles,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Validate)]
 pub struct UpdateUserPasswordBeforeHash {
+    #[validate(length(min = 8), custom(function = "validate_password"))]
     pub password: String,
 }
 
@@ -34,6 +41,7 @@ pub struct UpdateUserPasswordBeforeHash {
 pub struct UpdateUserPasswordAfterHash {
     pub password_hash: String,
 }
+
 //*converting from enum to string so we can store in postgressql */
 impl fmt::Display for Roles {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {

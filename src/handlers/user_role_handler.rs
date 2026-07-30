@@ -2,6 +2,7 @@ use axum::{
     Json,
     extract::{Path, State},
 };
+use validator::Validate;
 
 use crate::{
     errors::AppError,
@@ -13,6 +14,8 @@ pub async fn create_user(
     State(state): State<AppState>,
     Json(payload): Json<CreateUserRole>,
 ) -> Result<Json<Users>, AppError> {
+    payload.validate()?;
+
     let user = state.role_service.create_user_role_service(payload).await?;
 
     Ok(Json(user))
@@ -23,6 +26,8 @@ pub async fn update_user(
     Path(id): Path<i32>,
     Json(payload): Json<UpdateUserPasswordBeforeHash>,
 ) -> Result<Json<Users>, AppError> {
+    payload.validate()?;
+
     let update_user_password = state
         .role_service
         .update_user_password_service(id, payload)

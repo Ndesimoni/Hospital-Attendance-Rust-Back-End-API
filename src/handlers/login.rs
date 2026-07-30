@@ -1,5 +1,7 @@
 use axum::{Json, extract::State, http::StatusCode, response};
 
+use validator::Validate;
+
 use crate::{
     errors::AppError,
     models::{LoginRequest, LoginResponse},
@@ -10,6 +12,8 @@ pub async fn login(
     State(state): State<AppState>,
     Json(payload): Json<LoginRequest>,
 ) -> Result<Json<LoginResponse>, AppError> {
+    payload.validate()?;
+
     let response = state.auth_service.login(payload).await?;
 
     Ok(Json(response))

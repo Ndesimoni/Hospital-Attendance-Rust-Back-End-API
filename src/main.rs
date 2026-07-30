@@ -130,7 +130,7 @@ async fn main() {
 
     //* admin only routes */
     let admin_route = Router::new()
-        .route("/users", post(create_user))
+        .route("/reception/users", post(create_user))
         .route("/users/{id}", put(update_user))
         .route("/users", get(get_all_user))
         // .route("/users/:id", delete(delete_user))
@@ -142,10 +142,10 @@ async fn main() {
 
     let app = Router::new()
         .merge(public_routes)
-        .merge(authenticated_routes)
-        .merge(receptionist_routes)
-        .merge(doctor_routes)
+        .nest("/authenticate",authenticated_routes)
         .nest("/admin", admin_route)
+        .nest("/reception", receptionist_routes)
+        .nest("/doctor",doctor_routes)
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
@@ -156,3 +156,13 @@ async fn main() {
 
     axum::serve(listener, app).await.unwrap();
 }
+
+// use bcrypt::{DEFAULT_COST, hash};
+
+// fn main() {
+//     let password = "Admin@123";
+
+//     let hashed = hash(password, DEFAULT_COST).unwrap();
+
+//     println!("{}", hashed);
+// }

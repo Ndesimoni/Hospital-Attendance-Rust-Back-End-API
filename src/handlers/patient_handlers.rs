@@ -3,6 +3,8 @@ use axum::{
     extract::{Path, State},
 };
 
+use validator::Validate;
+
 use crate::{
     errors::AppError,
     models::{CreatePatient, Patient, UpdatePatient},
@@ -38,6 +40,8 @@ pub async fn create_patients(
     State(state): State<AppState>,
     Json(payload): Json<CreatePatient>,
 ) -> Result<Json<Patient>, AppError> {
+    payload.validate()?;
+
     let patient = state
         .patient_service
         .create_patients_service(payload)
@@ -52,6 +56,8 @@ pub async fn update_patients_detail(
     Path(id): Path<i32>,
     Json(payload): Json<UpdatePatient>,
 ) -> Result<Json<Patient>, AppError> {
+    payload.validate()?;
+
     let patient = state
         .patient_service
         .update_patient_details_service(id, payload)
