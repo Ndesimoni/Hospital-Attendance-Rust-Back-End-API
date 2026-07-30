@@ -3,12 +3,10 @@ use std::sync::Arc;
 use bcrypt::{DEFAULT_COST, hash};
 
 use crate::{
-    errors::AppError,
+  
     models::{
-        CreateUserRole, UpdateUserPasswordAfterHash, UpdateUserPasswordBeforeHash, UserRoleCreated,
-        Users,
-    },
-    repositories::{auth_repository::AuthRepository, user_role_repository::UserRoleRepository},
+        AppError, CreateUserRole, UpdateUserPasswordAfterHash, UpdateUserPasswordBeforeHash, UserRoleCreated, Users,
+    }, repositories::{auth_repository::AuthRepository, user_role_repository::UserRoleRepository},
 };
 
 #[derive(Clone)]

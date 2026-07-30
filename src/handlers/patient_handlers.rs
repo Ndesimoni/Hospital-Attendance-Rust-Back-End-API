@@ -1,23 +1,31 @@
 use axum::{
     Json,
-    extract::{Path, State},
+    extract::{Path, Query, State},
 };
 
 use validator::Validate;
 
 use crate::{
-    errors::AppError,
-    models::{CreatePatient, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Pagination, Patient, UpdatePatient},
     state::AppState,
 };
 
 ////////////////////////////////////////////////////////
 
-//*get all patients */
+//*get all patients and invoke the pagination*/
 pub async fn get_all_patients(
     State(state): State<AppState>,
+    Query(pagination): Query<Pagination>,
 ) -> Result<Json<Vec<Patient>>, AppError> {
-    let patients = state.patient_service.get_all_patients_service().await?;
+    pagination.validation()?;
+
+    let page = pagination.page();
+    let limit = pagination.limit();
+
+    let patients = state
+        .patient_service
+        .get_all_patients_service(page, limit)
+        .await?;
 
     Ok(Json(patients))
 }

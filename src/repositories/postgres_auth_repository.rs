@@ -2,8 +2,7 @@ use async_trait::async_trait;
 use sqlx::PgPool;
 
 use crate::{
-    errors::AppError,
-    models::{CreateUser, Users},
+    models::{AppError, CreateUser, Users},
     repositories::auth_repository::AuthRepository,
 };
 

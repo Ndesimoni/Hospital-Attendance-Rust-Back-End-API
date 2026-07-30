@@ -1,9 +1,6 @@
 use axum::{extract::Request, middleware::Next, response::Response};
 
-use crate::{
-    errors::AppError,
-    models::{Claims, Roles},
-};
+use crate::models::{AppError, Claims, Roles};
 
 pub async fn require_doctor(request: Request, next: Next) -> Result<Response, AppError> {
     let claim = request

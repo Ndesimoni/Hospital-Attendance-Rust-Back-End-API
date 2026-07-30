@@ -5,7 +5,7 @@ use axum::{
     response::Response,
 };
 
-use crate::{errors::AppError, middleware::jwt::verify_token, state::AppState};
+use crate::{middleware::jwt::verify_token, models::AppError, state::AppState};
 
 //*using the token in the middleware */
 pub async fn auth_middleware(

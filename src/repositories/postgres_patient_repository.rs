@@ -1,6 +1,5 @@
 use crate::{
-    errors::AppError,
-    models::{CreatePatient, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
@@ -22,19 +21,21 @@ impl PostgresPatientRepository {
 
 #[async_trait]
 impl PatientRepository for PostgresPatientRepository {
-    async fn get_all_patients_trait(&self) -> Result<Vec<Patient>, AppError> {
+    async fn get_all_patients_trait(
+        &self,
+        limit: u32,
+        offset: u32,
+    ) -> Result<Vec<Patient>, AppError> {
         let patient = sqlx::query_as!(
             Patient,
             r#"
-      SELECT
-      id,
-      name,
-      age,
-      gender,
-      email,
-      contact
-
-      FROM patients"#
+        SELECT *
+        FROM patients
+        LIMIT $1
+        OFFSET $2
+        "#,
+            limit as i64,
+            offset as i64
         )
         .fetch_all(&self.pool)
         .await?;

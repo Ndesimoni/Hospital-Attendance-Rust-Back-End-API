@@ -39,6 +39,7 @@ use task_flow_api::{
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
+
     let pool = create_pool().await;
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
 
@@ -111,6 +112,7 @@ async fn main() {
     //* receptionist only routes */
     let receptionist_routes = Router::new()
         .route("/patients", post(create_patients))
+        .route("/patients", get(get_all_patients))
         .route("/patients/{id}", put(update_patients_detail))
         .route("/patients/{id}/visits", post(create_visit))
         .layer(middleware::from_fn(require_receptionist))
@@ -142,10 +144,10 @@ async fn main() {
 
     let app = Router::new()
         .merge(public_routes)
-        .nest("/authenticate",authenticated_routes)
+        .nest("/authenticate", authenticated_routes)
         .nest("/admin", admin_route)
         .nest("/reception", receptionist_routes)
-        .nest("/doctor",doctor_routes)
+        .nest("/doctor", doctor_routes)
         .with_state(app_state);
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
@@ -156,13 +158,3 @@ async fn main() {
 
     axum::serve(listener, app).await.unwrap();
 }
-
-// use bcrypt::{DEFAULT_COST, hash};
-
-// fn main() {
-//     let password = "Admin@123";
-
-//     let hashed = hash(password, DEFAULT_COST).unwrap();
-
-//     println!("{}", hashed);
-// }

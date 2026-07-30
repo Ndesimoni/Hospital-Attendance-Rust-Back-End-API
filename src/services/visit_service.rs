@@ -1,8 +1,7 @@
 use std::sync::Arc;
 
 use crate::{
-    errors::AppError,
-    models::{CreateVisit, NewVisit, UpdateVisit, Visit},
+    models::{AppError, CreateVisit, NewVisit, UpdateVisit, Visit},
     repositories::{patient_repository::PatientRepository, visit_repository::VisitRepository},
     services::diagnosis_services::diagnosis_services,
 };

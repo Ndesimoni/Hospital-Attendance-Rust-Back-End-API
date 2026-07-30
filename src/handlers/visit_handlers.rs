@@ -4,8 +4,7 @@ use axum::{
 };
 
 use crate::{
-    errors::AppError,
-    models::{CreateVisit, UpdateVisit, Visit},
+    models::{AppError, CreateVisit, UpdateVisit, Visit},
     state::AppState,
 };
 

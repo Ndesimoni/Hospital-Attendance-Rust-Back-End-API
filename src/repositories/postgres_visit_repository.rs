@@ -3,8 +3,7 @@ use axum::http::StatusCode;
 use sqlx::PgPool;
 
 use crate::{
-    errors::AppError,
-    models::{CreateVisit, NewVisit, UpdateVisit, Visit},
+    models::{AppError, CreateVisit, NewVisit, UpdateVisit, Visit},
     repositories::{patient_repository::PatientRepository, visit_repository::VisitRepository},
 };
 

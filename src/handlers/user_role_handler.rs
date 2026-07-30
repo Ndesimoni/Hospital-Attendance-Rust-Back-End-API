@@ -5,8 +5,7 @@ use axum::{
 use validator::Validate;
 
 use crate::{
-    errors::AppError,
-    models::{CreateUserRole, UpdateUserPasswordBeforeHash, Users},
+    models::{AppError, CreateUserRole, UpdateUserPasswordBeforeHash, Users},
     state::AppState,
 };
 

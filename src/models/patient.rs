@@ -30,3 +30,10 @@ pub struct UpdatePatient {
     pub email: String,
     pub contact: String,
 }
+
+#[derive(Debug, Deserialize, Serialize, Clone, Validate)]
+pub struct PatientsLogin {
+    #[validate(email)]
+    pub email: String,
+    pub contact: String,
+}

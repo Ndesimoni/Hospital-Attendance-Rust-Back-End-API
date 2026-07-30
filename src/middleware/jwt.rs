@@ -11,10 +11,7 @@ use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode}
 
 use serde::{Deserialize, Serialize};
 
-use crate::{
-    errors::AppError,
-    models::{Claims, Roles},
-};
+use crate::models::{AppError, Claims, Roles};
 
 //////////////////////////////////////
 
@@ -26,7 +23,7 @@ pub fn create_token(
     secret: &str,
 ) -> Result<String, AppError> {
     let expiration = Utc::now()
-        .checked_add_signed(Duration::hours(1))
+        .checked_add_signed(Duration::hours(120))
         .unwrap()
         .timestamp() as usize;
 

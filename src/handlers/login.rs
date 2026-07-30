@@ -3,8 +3,7 @@ use axum::{Json, extract::State, http::StatusCode, response};
 use validator::Validate;
 
 use crate::{
-    errors::AppError,
-    models::{LoginRequest, LoginResponse},
+    models::{AppError, LoginRequest, LoginResponse},
     state::{self, AppState},
 };
 

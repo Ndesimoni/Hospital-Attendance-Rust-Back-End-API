@@ -3,9 +3,8 @@ use std::sync::Arc;
 use bcrypt::{DEFAULT_COST, hash, verify};
 
 use crate::{
-    errors::AppError,
     middleware::jwt::create_token,
-    models::{CreateUser, LoginRequest, LoginResponse, RegisterRequest, Users},
+    models::{AppError, CreateUser, LoginRequest, LoginResponse, RegisterRequest, Users},
     repositories::auth_repository::AuthRepository,
 };
 

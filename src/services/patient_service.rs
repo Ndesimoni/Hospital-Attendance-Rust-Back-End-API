@@ -1,8 +1,7 @@
 use std::sync::Arc;
 
 use crate::{
-    errors::AppError,
-    models::{CreatePatient, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 //////////////////////////////////////
@@ -17,8 +16,19 @@ impl PatientService {
         Self { repository }
     }
 
-    pub async fn get_all_patients_service(&self) -> Result<Vec<Patient>, AppError> {
-        self.repository.get_all_patients_trait().await
+    pub async fn get_all_patients_service(
+        &self,
+        page: u32,
+        limit: u32,
+    ) -> Result<Vec<Patient>, AppError> {
+        let offset = (page - 1) * limit;
+
+        let patients = self
+            .repository
+            .get_all_patients_trait(limit, offset)
+            .await?;
+
+        Ok(patients)
     }
 
     pub async fn create_patients_service(
