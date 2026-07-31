@@ -12,7 +12,7 @@ pub use claims::Claims;
 pub use errors::*;
 pub use pagination::*;
 
-pub use patient::{CreatePatient, Patient, PatientResponse, UpdatePatient};
+pub use patient::{CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient};
 
 pub use role::{
     CreateUserRole, Roles, UpdateUserPasswordAfterHash, UpdateUserPasswordBeforeHash,

@@ -1,5 +1,4 @@
 use serde_json::json;
-use std::{eprint, eprintln};
 
 use axum::{
     http::StatusCode,

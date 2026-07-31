@@ -1,5 +1,5 @@
 use crate::{
-    models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
@@ -129,6 +129,61 @@ impl PatientRepository for PostgresPatientRepository {
             payload.email,
             payload.contact,
             id
+        )
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(patient)
+    }
+
+    //get patient by email
+    async fn get_patients_by_email_trait(&self, email: &str) -> Result<Option<Patient>, AppError> {
+        let patient = sqlx::query_as!(
+            Patient,
+            r#"
+        SELECT
+            id,
+            name,
+            age,
+            gender,
+            email,
+            contact
+        
+
+        FROM patients
+
+        WHERE email = $1
+        "#,
+            email
+        )
+        .fetch_optional(&self.pool)
+        .await?;
+
+        Ok(patient)
+    }
+
+    //get patient by email
+    async fn get_patients_by_contact_trait(
+        &self,
+        contact: &str,
+    ) -> Result<Option<Patient>, AppError> {
+        let patient = sqlx::query_as!(
+            Patient,
+            r#"
+        SELECT
+            id,
+            name,
+            age,
+            gender,
+            email,
+            contact
+        
+
+        FROM patients
+
+        WHERE contact = $1
+        "#,
+            contact
         )
         .fetch_optional(&self.pool)
         .await?;

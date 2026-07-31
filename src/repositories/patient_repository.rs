@@ -1,6 +1,8 @@
 use axum::http::StatusCode;
 
-use crate::models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient};
+use crate::models::{
+    AppError, CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient,
+};
 use async_trait::async_trait;
 
 ///////////////////////////////////////////////
@@ -21,5 +23,13 @@ pub trait PatientRepository: Send + Sync {
         &self,
         id: i32,
         payload: UpdatePatient,
+    ) -> Result<Option<Patient>, AppError>;
+
+    async fn get_patients_by_email_trait(&self, payload: &str)
+    -> Result<Option<Patient>, AppError>;
+
+    async fn get_patients_by_contact_trait(
+        &self,
+        payload: &str,
     ) -> Result<Option<Patient>, AppError>;
 }

@@ -44,8 +44,9 @@ pub struct UpdatePatient {
 
 //* this is the patient login struct */
 #[derive(Debug, Deserialize, Serialize, Clone, Validate)]
-pub struct PatientsLogin {
+
+pub struct PatientOtpRequest {
     #[validate(email)]
-    pub email: String,
-    pub contact: String,
+    pub email: Option<String>,
+    pub contact: Option<String>,
 }

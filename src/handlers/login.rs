@@ -14,10 +14,10 @@ pub async fn login(
     payload.validate()?;
 
     println!("this handler is working good");
-    
+
     let response = state.auth_service.login(payload).await?;
 
     Ok(Json(response))
 }
 
-// pub async fn patient()->Result<Json<>>
+
