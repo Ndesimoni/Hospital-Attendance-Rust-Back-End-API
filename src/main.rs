@@ -139,7 +139,7 @@ async fn main() {
         .route("/users", post(create_user))
         .route("/users/{id}", put(update_user))
         .route("/users", get(get_all_user))
-        // .route("/users/:id", delete(delete_user))
+        .route("/patients", get(get_all_patients))
         .route_layer(middleware::from_fn(require_admin))
         .layer(middleware::from_fn_with_state(
             app_state.clone(),
