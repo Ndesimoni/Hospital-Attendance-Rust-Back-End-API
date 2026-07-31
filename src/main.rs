@@ -92,9 +92,13 @@ async fn main() {
     };
 
     //*public routes */
+    //user public routes
     let public_routes = Router::new()
         .route("/create_user", post(auth_handler))
         .route("/login", post(login));
+
+    //patients public routes
+    // let public_routes = Router::new().route("/patients/login", post(login));
 
     //* routes for all authenticated users */
     let authenticated_routes = Router::new()
@@ -132,7 +136,7 @@ async fn main() {
 
     //* admin only routes */
     let admin_route = Router::new()
-        .route("/reception/users", post(create_user))
+        .route("/users", post(create_user))
         .route("/users/{id}", put(update_user))
         .route("/users", get(get_all_user))
         // .route("/users/:id", delete(delete_user))

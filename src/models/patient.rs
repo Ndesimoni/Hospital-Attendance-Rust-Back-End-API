@@ -13,6 +13,17 @@ pub struct Patient {
     pub contact: String,
 }
 
+#[derive(Debug, Serialize, Clone, sqlx::FromRow)]
+pub struct PatientResponse {
+    pub id: i32,
+    pub name: String,
+    pub age: i32,
+    pub gender: String,
+    pub email: String,
+    pub contact: String,
+    pub role: String,
+}
+
 //todo need to add the patient email and number fields later on
 #[derive(Debug, Deserialize, Serialize, Clone, Validate)]
 pub struct CreatePatient {
@@ -31,6 +42,7 @@ pub struct UpdatePatient {
     pub contact: String,
 }
 
+//* this is the patient login struct */
 #[derive(Debug, Deserialize, Serialize, Clone, Validate)]
 pub struct PatientsLogin {
     #[validate(email)]

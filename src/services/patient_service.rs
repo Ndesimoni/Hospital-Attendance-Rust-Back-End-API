@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use crate::{
-    models::{AppError, CreatePatient, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 //////////////////////////////////////
@@ -20,7 +20,7 @@ impl PatientService {
         &self,
         page: u32,
         limit: u32,
-    ) -> Result<Vec<Patient>, AppError> {
+    ) -> Result<Vec<PatientResponse>, AppError> {
         let offset = (page - 1) * limit;
 
         let patients = self

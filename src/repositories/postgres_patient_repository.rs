@@ -1,5 +1,5 @@
 use crate::{
-    models::{AppError, CreatePatient, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
@@ -25,9 +25,9 @@ impl PatientRepository for PostgresPatientRepository {
         &self,
         limit: u32,
         offset: u32,
-    ) -> Result<Vec<Patient>, AppError> {
+    ) -> Result<Vec<PatientResponse>, AppError> {
         let patient = sqlx::query_as!(
-            Patient,
+            PatientResponse,
             r#"
         SELECT *
         FROM patients
@@ -55,6 +55,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
+        
 
         FROM patients
 
@@ -88,6 +89,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
+        
         "#,
             payload.name,
             payload.age,

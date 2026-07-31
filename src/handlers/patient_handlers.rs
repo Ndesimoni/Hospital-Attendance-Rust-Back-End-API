@@ -6,7 +6,7 @@ use axum::{
 use validator::Validate;
 
 use crate::{
-    models::{AppError, CreatePatient, Pagination, Patient, UpdatePatient},
+    models::{AppError, CreatePatient, Pagination, Patient, PatientResponse, UpdatePatient},
     state::AppState,
 };
 
@@ -16,7 +16,7 @@ use crate::{
 pub async fn get_all_patients(
     State(state): State<AppState>,
     Query(pagination): Query<Pagination>,
-) -> Result<Json<Vec<Patient>>, AppError> {
+) -> Result<Json<Vec<PatientResponse>>, AppError> {
     pagination.validation()?;
 
     let page = pagination.page();

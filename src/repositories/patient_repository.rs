@@ -1,6 +1,6 @@
 use axum::http::StatusCode;
 
-use crate::models::{AppError, CreatePatient, Patient, UpdatePatient};
+use crate::models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient};
 use async_trait::async_trait;
 
 ///////////////////////////////////////////////
@@ -11,7 +11,7 @@ pub trait PatientRepository: Send + Sync {
         &self,
         limit: u32,
         offset: u32,
-    ) -> Result<Vec<Patient>, AppError>;
+    ) -> Result<Vec<PatientResponse>, AppError>;
 
     async fn get_patients_by_id_trait(&self, id: i32) -> Result<Option<Patient>, AppError>;
 
