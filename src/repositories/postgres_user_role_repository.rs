@@ -30,8 +30,8 @@ impl UserRoleRepository for PostgresUserRoleRepository {
           )
 
             VALUES($1, $2, $3)
-          
-            RETURNING 
+
+            RETURNING
              id,
              email,
              password_hash,
@@ -100,10 +100,10 @@ impl UserRoleRepository for PostgresUserRoleRepository {
         let user = sqlx::query_as!(
             Users,
             r#"
-         
+
         UPDATE users
         SET
-          
+
             password_hash = $1
 
         WHERE id = $2

@@ -1,8 +1,9 @@
 use async_trait::async_trait;
+use chrono::NaiveDateTime;
 use sqlx::PgPool;
 
 use crate::{
-    models::{AppError, CreateUser, Users},
+    models::{AppError, CreateUser, OtpResponse, Users},
     repositories::auth_repository::AuthRepository,
 };
 

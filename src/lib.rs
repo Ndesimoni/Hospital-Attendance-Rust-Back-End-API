@@ -5,6 +5,6 @@ pub mod middleware;
 pub mod models;
 pub mod repositories;
 pub mod services;
-pub mod validation;
-
 pub mod state;
+pub mod utils;
+pub mod validation;

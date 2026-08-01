@@ -1,21 +1,19 @@
-
 services:
-   postgres:
-     image: postgres:17
-     container_name: task_flow_postgres
-     restart: always
+  postgres:
+    image: postgres:17
+    container_name: task_flow_postgres
+    restart: always
 
-     environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: Nde@1998
-        POSTGRES_DB: task_flow_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Nde@1998
+      POSTGRES_DB: task_flow_db
 
-     ports:
-       - "5433:5432"
+    ports:
+      - "5433:5432"
 
-     volumes:
-       - postgres_data:/var/lib/postgresql/data
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
 
-volumes: 
+volumes:
   postgres_data:
-

@@ -1,6 +1,6 @@
 use axum::{
     Router, middleware,
-    routing::{delete, get, post, post_service, put},
+    routing::{get, post, put},
 };
 
 use std::sync::Arc;
@@ -9,8 +9,8 @@ use task_flow_api::{
     db::create_pool,
     handlers::{
         auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_user,
-        get_all_visits, get_patient_visit, get_patients_by_id, login, update_patients_detail,
-        update_user, update_visit,
+        get_all_visits, get_patient_visit, get_patients_by_id, login, patient_login,
+        update_patients_detail, update_user, update_visit,
     },
     middleware::{
         auth::auth_middleware,
@@ -18,18 +18,18 @@ use task_flow_api::{
         role::{require_admin, require_receptionist},
     },
     repositories::{
-        auth_repository::AuthRepository,
-        patient_repository::PatientRepository,
-        postgres_auth_repository::PostgresAuthRepository,
+        auth_repository::AuthRepository, patient_otp_repository::PatientOtpRepository,
+        patient_repository::PatientRepository, postgres_auth_repository::PostgresAuthRepository,
+        postgres_patient_otp_repository::PostgresPatientOtpRepository,
         postgres_patient_repository::PostgresPatientRepository,
         postgres_user_role_repository::PostgresUserRoleRepository,
         postgres_visit_repository::PostgresVisitRepository,
-        user_role_repository::UserRoleRepository,
-        visit_repository::{self, VisitRepository},
+        user_role_repository::UserRoleRepository, visit_repository::VisitRepository,
     },
     services::{
-        auth_service::AuthService, patient_service::PatientService,
-        user_role_service::UserRoleServices, visit_service::VisitService,
+        auth_service::AuthService, patient_opt_service::PatientOtpService,
+        patient_service::PatientService, user_role_service::UserRoleServices,
+        visit_service::VisitService,
     },
     state::AppState,
 };
@@ -48,7 +48,6 @@ async fn main() {
 
     let patient_repository: Arc<dyn PatientRepository> = patient_repository;
 
-    // Create patient and inject repository
     let patient_service = Arc::new(PatientService::new(patient_repository.clone()));
 
     ///////////////////////////////////////////////////////////
@@ -57,7 +56,6 @@ async fn main() {
 
     let visit_repository: Arc<dyn VisitRepository> = visit_repository;
 
-    // Create visit and inject repository
     let visit_service = Arc::new(VisitService::new(
         visit_repository,
         patient_repository.clone(),
@@ -72,7 +70,7 @@ async fn main() {
     let auth_service = Arc::new(AuthService::new(auth_repository.clone()));
 
     ////////////////////////////////
-    //* create user role1 */
+    //* for working with user role */
     let user_role_repository = Arc::new(PostgresUserRoleRepository::new(pool.clone()));
 
     let role_repository: Arc<dyn UserRoleRepository> = user_role_repository;
@@ -82,6 +80,16 @@ async fn main() {
         role_repository,
     ));
 
+    ////////////////////////////////////////////////////
+    //* for working with patient login */
+    let patient_opt_repository = Arc::new(PostgresPatientOtpRepository::new(pool.clone()));
+
+    let otp_service: Arc<dyn PatientOtpRepository> = patient_opt_repository;
+
+    let otp_service = Arc::new(PatientOtpService::new(otp_service, patient_repository));
+
+    ////////////////////////////////////////////////////
+
     //* app state
     let app_state = AppState {
         patient_service,
@@ -89,6 +97,7 @@ async fn main() {
         auth_service,
         jwt_secret,
         role_service,
+        otp_service,
     };
 
     //*public routes */
@@ -98,7 +107,7 @@ async fn main() {
         .route("/login", post(login));
 
     //patients public routes
-    // let public_routes = Router::new().route("/patients/login", post(login));
+    let patient_public_routes = Router::new().route("/login", post(patient_login));
 
     //* routes for all authenticated users */
     let authenticated_routes = Router::new()
@@ -110,8 +119,6 @@ async fn main() {
             app_state.clone(),
             auth_middleware,
         ));
-
-    //////////////////
 
     //* receptionist only routes */
     let receptionist_routes = Router::new()
@@ -148,6 +155,7 @@ async fn main() {
 
     let app = Router::new()
         .merge(public_routes)
+        .nest("/patients", patient_public_routes)
         .nest("/authenticate", authenticated_routes)
         .nest("/admin", admin_route)
         .nest("/reception", receptionist_routes)

@@ -1,9 +1,13 @@
 use crate::{
-    models::{AppError, CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient},
+    models::{
+        AppError, CreatePatient, OtpResponse, Patient, PatientOtpRequest, PatientResponse,
+        UpdatePatient,
+    },
     repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
 use axum::http::StatusCode;
+use chrono::NaiveDateTime;
 use sqlx::PgPool;
 
 //////////////////////////////////

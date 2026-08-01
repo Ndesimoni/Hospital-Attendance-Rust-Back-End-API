@@ -51,31 +51,4 @@ impl PatientService {
             .update_patients_detail_trait(id, payload)
             .await
     }
-
-    //*requesting the opt */
-    pub async fn request_patient_otp_service(
-        &self,
-        payload: PatientOtpRequest,
-    ) -> Result<Patient, AppError> {
-        match (payload.email, payload.contact) {
-            (Some(email), None) => {
-                let patient = self.repository.get_patients_by_email_trait(&email).await?;
-
-                patient.ok_or(AppError::NotFound)
-            }
-
-            (None, Some(contact)) => {
-                let patient = self
-                    .repository
-                    .get_patients_by_contact_trait(&contact)
-                    .await?;
-
-                patient.ok_or(AppError::NotFound)
-            }
-
-            _ => Err(AppError::BadRequest(String::from(
-                "Provide exactly one of email or contact number",
-            ))),
-        }
-    }
 }
