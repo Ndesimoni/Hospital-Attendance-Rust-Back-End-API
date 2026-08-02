@@ -170,3 +170,17 @@ async fn main() {
 
     axum::serve(listener, app).await.unwrap();
 }
+
+
+
+
+// use bcrypt::{DEFAULT_COST, hash};
+
+// fn main (){
+
+//   let password = "Admin@123";
+
+//   let a = hash(password,DEFAULT_COST).unwrap();
+
+//   println!("{:?}",a);
+// }

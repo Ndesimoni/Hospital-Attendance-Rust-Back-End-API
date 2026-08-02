@@ -5,10 +5,7 @@ use bcrypt::{DEFAULT_COST, hash, verify};
 use crate::{
     middleware::jwt::create_token,
     models::{AppError, CreateUser, LoginRequest, LoginResponse, RegisterRequest, Users},
-    repositories::{
-        auth_repository::AuthRepository, patient_otp_repository::PatientOtpRepository,
-        patient_repository::PatientRepository,
-    },
+    repositories::auth_repository::AuthRepository
 };
 
 pub struct AuthService {
@@ -55,8 +52,13 @@ impl AuthService {
             None => return Err(AppError::Unauthorized),
         };
 
-        let valid_password = verify(payload.password, &user.password_hash)
-            .map_err(|_| AppError::InternalServerError)?;
+        let valid_password = match verify(payload.password, &user.password_hash) {
+            Ok(valid) => valid,
+            Err(err) => {
+                eprintln!("bcrypt verification failed: {err:?}");
+                return Err(AppError::Unauthorized);
+            }
+        };
 
         if !valid_password {
             return Err(AppError::Unauthorized);
