@@ -9,8 +9,8 @@ use task_flow_api::{
     db::create_pool,
     handlers::{
         auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_user,
-        get_all_visits, get_patient_visit, get_patients_by_id, login, patient_login,
-        update_patients_detail, update_user, update_visit,
+        get_all_visits, get_patient_visit, get_patients_by_id, login, login_after_otp_verification,
+        patient_login, update_patients_detail, update_user, update_visit,
     },
     middleware::{
         auth::auth_middleware,
@@ -86,7 +86,11 @@ async fn main() {
 
     let otp_service: Arc<dyn PatientOtpRepository> = patient_opt_repository;
 
-    let otp_service = Arc::new(PatientOtpService::new(otp_service, patient_repository));
+    let otp_service = Arc::new(PatientOtpService::new(
+        otp_service,
+        patient_repository,
+        jwt_secret.clone(),
+    ));
 
     ////////////////////////////////////////////////////
 
@@ -108,6 +112,8 @@ async fn main() {
 
     //patients public routes
     let patient_public_routes = Router::new().route("/login", post(patient_login));
+    let patient_log_after_otp_verification =
+        Router::new().route("/verify-otp", post(login_after_otp_verification));
 
     //* routes for all authenticated users */
     let authenticated_routes = Router::new()
@@ -156,6 +162,7 @@ async fn main() {
     let app = Router::new()
         .merge(public_routes)
         .nest("/patients", patient_public_routes)
+        .nest("/patients", patient_log_after_otp_verification)
         .nest("/authenticate", authenticated_routes)
         .nest("/admin", admin_route)
         .nest("/reception", receptionist_routes)
@@ -170,17 +177,3 @@ async fn main() {
 
     axum::serve(listener, app).await.unwrap();
 }
-
-
-
-
-// use bcrypt::{DEFAULT_COST, hash};
-
-// fn main (){
-
-//   let password = "Admin@123";
-
-//   let a = hash(password,DEFAULT_COST).unwrap();
-
-//   println!("{:?}",a);
-// }

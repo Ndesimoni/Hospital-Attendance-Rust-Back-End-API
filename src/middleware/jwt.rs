@@ -29,7 +29,7 @@ pub fn create_token(
 
     let claims = Claims {
         sub: user_id,
-        email: email,
+        email,
         role,
         exp: expiration,
     };

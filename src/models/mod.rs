@@ -14,7 +14,9 @@ pub use errors::*;
 pub use pagination::*;
 pub use patient_otp::*;
 
-pub use patient::{CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient};
+pub use patient_otp::PatientOtpRequest;
+
+pub use patient::{CreatePatient, Patient, PatientResponse, UpdatePatient};
 
 pub use role::{
     CreateUserRole, Roles, UpdateUserPasswordAfterHash, UpdateUserPasswordBeforeHash,

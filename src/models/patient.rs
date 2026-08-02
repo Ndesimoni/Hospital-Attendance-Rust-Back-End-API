@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 use validator::Validate;
 
-use crate::validation::validate_password;
-
+//////////////////////////////////////////////////
 #[derive(Debug, Deserialize, Serialize, Clone, sqlx::FromRow)]
 pub struct Patient {
     pub id: i32,
@@ -35,18 +34,10 @@ pub struct CreatePatient {
     pub contact: String,
 }
 
+//* this is for updating patient details struct */
 #[derive(Debug, Deserialize, Serialize, Clone, Validate)]
 pub struct UpdatePatient {
     #[validate(email)]
     pub email: String,
     pub contact: String,
-}
-
-//* this is the patient login struct */
-#[derive(Debug, Deserialize, Serialize, Clone, Validate)]
-
-pub struct PatientOtpRequest {
-    #[validate(email)]
-    pub email: Option<String>,
-    pub contact: Option<String>,
 }

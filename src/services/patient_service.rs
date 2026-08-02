@@ -1,11 +1,10 @@
 use std::sync::Arc;
 
 use crate::{
-    models::{AppError, CreatePatient, Patient, PatientOtpRequest, PatientResponse, UpdatePatient},
+    models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 //////////////////////////////////////
-///
 
 pub struct PatientService {
     repository: Arc<dyn PatientRepository>,

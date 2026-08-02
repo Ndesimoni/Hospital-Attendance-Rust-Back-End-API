@@ -5,7 +5,7 @@ use bcrypt::{DEFAULT_COST, hash, verify};
 use crate::{
     middleware::jwt::create_token,
     models::{AppError, CreateUser, LoginRequest, LoginResponse, RegisterRequest, Users},
-    repositories::auth_repository::AuthRepository
+    repositories::auth_repository::AuthRepository,
 };
 
 pub struct AuthService {

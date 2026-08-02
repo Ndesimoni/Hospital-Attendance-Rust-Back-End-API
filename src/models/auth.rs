@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use validator::{Validate, ValidationError};
+use validator::Validate;
 
 use crate::validation::validate_password;
 
