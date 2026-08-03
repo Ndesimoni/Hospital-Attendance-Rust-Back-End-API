@@ -6,5 +6,5 @@ pub async fn create_pool() -> PgPool {
         .max_connections(5)
         .connect(&std::env::var("DATABASE_URL").unwrap())
         .await
-        .expect("the data base was connected successfully ")
+        .expect("DATABASE CONNECTION FAILED")
 }

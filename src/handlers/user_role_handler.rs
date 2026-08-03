@@ -15,6 +15,8 @@ pub async fn create_user(
 ) -> Result<Json<Users>, AppError> {
     payload.validate()?;
 
+    tracing::info!("Create doctor endpoint reached");
+
     let user = state.role_service.create_user_role_service(payload).await?;
 
     Ok(Json(user))

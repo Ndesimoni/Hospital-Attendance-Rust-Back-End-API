@@ -16,6 +16,12 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d task_flow_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
 
   api:
     build: .
@@ -33,7 +39,8 @@ services:
       RUST_LOG: ${RUST_LOG}
 
     depends_on:
-      - postgres
+       postgres:
+         condition: service_healthy
 
 
 volumes:
