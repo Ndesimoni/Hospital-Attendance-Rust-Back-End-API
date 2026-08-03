@@ -65,20 +65,6 @@ impl PatientOtpRepository for PostgresPatientOtpRepository {
         Ok(otp)
     }
 
-    // async fn delete_by_patient_id_trait(&self, patient_id: i32) -> Result<(), AppError> {
-    //     sqlx::query!(
-    //         r#"
-    //     DELETE FROM patients_otp
-    //     WHERE patient_id = $1
-    //     "#,
-    //         patient_id
-    //     )
-    //     .execute(&self.pool)
-    //     .await?;
-
-    //     Ok(())
-    // }
-
     async fn delete_by_patient_id_trait(&self, patient_id: i32) -> Result<(), AppError> {
         sqlx::query!(
             r#"

@@ -1,0 +1,79 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n    UPDATE visits\n    SET\n        symptoms = $1,\n        diagnosis = $2,\n        medication = $3\n    WHERE id = $4\n    RETURNING\n        id,\n        patient_id,\n        symptoms,\n        diagnosis,\n        medication\n    ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "patient_id",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "patient_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "symptoms",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "symptoms"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "diagnosis",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "diagnosis"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "medication",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "medication"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "TextArray",
+        "Text",
+        "TextArray",
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "17106cd7659e18fb634365ce47b6d9d95c7db62494caf31355b7ab9e1c9fc98a"
+}

@@ -1,10 +1,4 @@
-use axum::http::StatusCode;
-use chrono::NaiveDateTime;
-
-use crate::models::{
-    AppError, CreatePatient, OtpResponse, Patient, PatientOtpRequest, PatientResponse,
-    UpdatePatient,
-};
+use crate::models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient};
 use async_trait::async_trait;
 
 ///////////////////////////////////////////////

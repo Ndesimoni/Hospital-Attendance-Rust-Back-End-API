@@ -1,8 +1,8 @@
-use axum::{Json, extract::State, http::StatusCode};
+use axum::{Json, extract::State};
 use validator::Validate;
 
 use crate::{
-    models::{AppError, RegisterRequest, Users, Visit},
+    models::{AppError, RegisterRequest, Users},
     state::AppState,
 };
 

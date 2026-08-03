@@ -1,10 +1,9 @@
 use async_trait::async_trait;
-use axum::http::StatusCode;
 use sqlx::PgPool;
 
 use crate::{
-    models::{AppError, CreateVisit, NewVisit, UpdateVisit, Visit},
-    repositories::{patient_repository::PatientRepository, visit_repository::VisitRepository},
+    models::{AppError, NewVisit, UpdateVisit, Visit},
+    repositories::visit_repository::VisitRepository,
 };
 
 pub struct PostgresVisitRepository {
@@ -23,7 +22,7 @@ impl VisitRepository for PostgresVisitRepository {
         let create_visit = sqlx::query_as!(
             Visit,
             r#"
-    INSERT INTO visits( 
+    INSERT INTO visits(
     patient_id,
     symptoms,
     diagnosis,
@@ -48,7 +47,7 @@ impl VisitRepository for PostgresVisitRepository {
         let visits = sqlx::query_as!(
             Visit,
             r#"
-        SELECT 
+        SELECT
         id,
         patient_id,
         symptoms,
@@ -68,14 +67,14 @@ impl VisitRepository for PostgresVisitRepository {
         let visits = sqlx::query_as!(
             Visit,
             r#"
-       
-        SELECT 
+
+        SELECT
         id,
         patient_id,
         symptoms,
         diagnosis,
         medication
-       
+
        FROM visits
 
        WHERE patient_id = $1

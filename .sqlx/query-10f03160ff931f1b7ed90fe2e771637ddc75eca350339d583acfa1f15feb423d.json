@@ -1,0 +1,74 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT\n        id,\n        patient_id,\n        symptoms,\n        diagnosis,\n        medication\n\n        FROM visits\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "id"
+          }
+        }
+      },
+      {
+        "ordinal": 1,
+        "name": "patient_id",
+        "type_info": "Int4",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "patient_id"
+          }
+        }
+      },
+      {
+        "ordinal": 2,
+        "name": "symptoms",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "symptoms"
+          }
+        }
+      },
+      {
+        "ordinal": 3,
+        "name": "diagnosis",
+        "type_info": "Text",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "diagnosis"
+          }
+        }
+      },
+      {
+        "ordinal": 4,
+        "name": "medication",
+        "type_info": "TextArray",
+        "origin": {
+          "Table": {
+            "table": "visits",
+            "name": "medication"
+          }
+        }
+      }
+    ],
+    "parameters": {
+      "Left": []
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "10f03160ff931f1b7ed90fe2e771637ddc75eca350339d583acfa1f15feb423d"
+}

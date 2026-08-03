@@ -1,4 +1,5 @@
 mod auth_handler;
+mod health_check;
 mod login;
 mod otp;
 mod patient_handlers;
@@ -6,6 +7,7 @@ mod user_role_handler;
 mod visit_handlers;
 
 pub use auth_handler::*;
+pub use health_check::*;
 pub use login::*;
 pub use otp::*;
 pub use patient_handlers::*;

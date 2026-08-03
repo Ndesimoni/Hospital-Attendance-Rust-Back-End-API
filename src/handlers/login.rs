@@ -1,10 +1,10 @@
-use axum::{Json, extract::State, http::StatusCode, response};
+use axum::{Json, extract::State};
 
 use validator::Validate;
 
 use crate::{
     models::{AppError, LoginRequest, LoginResponse},
-    state::{self, AppState},
+    state::AppState,
 };
 
 pub async fn login(

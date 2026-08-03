@@ -1,4 +1,4 @@
-use crate::models::{AppError, CreateUser, RegisterRequest, Users};
+use crate::models::{AppError, CreateUser, Users};
 
 #[async_trait::async_trait]
 pub trait AuthRepository: Send + Sync {

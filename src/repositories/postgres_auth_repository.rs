@@ -1,9 +1,9 @@
 use async_trait::async_trait;
-use chrono::NaiveDateTime;
+
 use sqlx::PgPool;
 
 use crate::{
-    models::{AppError, CreateUser, OtpResponse, Users},
+    models::{AppError, CreateUser, Users},
     repositories::auth_repository::AuthRepository,
 };
 
@@ -51,7 +51,7 @@ impl AuthRepository for PostgresAuthRepository {
 
            VALUES ($1, $2)
 
-           RETURNING 
+           RETURNING
              id,
              email,
              password_hash,

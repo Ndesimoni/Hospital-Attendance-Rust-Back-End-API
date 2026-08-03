@@ -1,17 +1,11 @@
 use crate::{
-    models::{
-        AppError, CreatePatient, OtpResponse, Patient, PatientOtpRequest, PatientResponse,
-        UpdatePatient,
-    },
+    models::{AppError, CreatePatient, Patient, PatientResponse, UpdatePatient},
     repositories::patient_repository::PatientRepository,
 };
 use async_trait::async_trait;
-use axum::http::StatusCode;
-use chrono::NaiveDateTime;
 use sqlx::PgPool;
 
 //////////////////////////////////
-///
 
 pub struct PostgresPatientRepository {
     pool: PgPool,
@@ -59,7 +53,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
-        
+
 
         FROM patients
 
@@ -93,7 +87,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
-        
+
         "#,
             payload.name,
             payload.age,
@@ -152,7 +146,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
-        
+
 
         FROM patients
 
@@ -181,7 +175,7 @@ impl PatientRepository for PostgresPatientRepository {
             gender,
             email,
             contact
-        
+
 
         FROM patients
 

@@ -9,8 +9,9 @@ use task_flow_api::{
     db::create_pool,
     handlers::{
         auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_user,
-        get_all_visits, get_patient_visit, get_patients_by_id, login, login_after_otp_verification,
-        patient_login, update_patients_detail, update_user, update_visit,
+        get_all_visits, get_patient_visit, get_patients_by_id, health_check, login,
+        login_after_otp_verification, patient_login, update_patients_detail, update_user,
+        update_visit,
     },
     middleware::{
         auth::auth_middleware,
@@ -104,6 +105,9 @@ async fn main() {
         otp_service,
     };
 
+    //*health check route  */
+    let health_check = Router::new().route("/health", get(health_check));
+
     //*public routes */
     //user public routes
     let public_routes = Router::new()
@@ -162,6 +166,7 @@ async fn main() {
 
     let app = Router::new()
         .merge(public_routes)
+        .merge(health_check)
         .nest("/patients", patient_public_routes)
         .nest("/patients", patient_log_after_otp_verification)
         .nest("/authenticate", authenticated_routes)
@@ -177,7 +182,7 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind(&address).await.unwrap();
 
-    println!("Server started on http://{}", address);
+    tracing::info!("Server started on http://{}", address);
 
     axum::serve(listener, app).await.unwrap();
 }

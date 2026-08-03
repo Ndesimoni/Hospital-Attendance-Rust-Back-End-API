@@ -1,4 +1,4 @@
-use crate::models::{AppError, CreateVisit, NewVisit, UpdateVisit, Visit};
+use crate::models::{AppError, NewVisit, UpdateVisit, Visit};
 
 #[async_trait::async_trait]
 pub trait VisitRepository: Send + Sync {

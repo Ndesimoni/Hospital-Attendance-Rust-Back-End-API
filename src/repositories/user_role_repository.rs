@@ -1,6 +1,5 @@
 use crate::models::{UpdateUserPasswordAfterHash, UserRoleCreated, Users};
 use async_trait::async_trait;
-use axum::http::StatusCode;
 
 #[async_trait]
 pub trait UserRoleRepository: Send + Sync {

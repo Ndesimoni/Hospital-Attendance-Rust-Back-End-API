@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO patients_otp (\n                patient_id,\n                otp,\n                expires_at\n            )\n            VALUES ($1, $2, $3)\n            ",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Varchar",
+        "Timestamp"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "c4d94d0ef7ad046f8776e96233ac73b5220aa33163a711e0e63808b387ea8932"
+}

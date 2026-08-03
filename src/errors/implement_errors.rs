@@ -68,13 +68,13 @@ impl From<sqlx::Error> for AppError {
                 if data_error.is_unique_violation() {
                     AppError::Conflict(String::from("Resource already exists"))
                 } else {
-                    eprintln!("internal error: {:?}", data_error);
+                    tracing::error!("internal error: {:?}", data_error);
                     AppError::InternalServerError
                 }
             }
 
             error => {
-                eprintln!("Database error: {:?}", error);
+                tracing::error!("Database error: {:?}", error);
                 AppError::InternalServerError
             }
         }
@@ -83,14 +83,14 @@ impl From<sqlx::Error> for AppError {
 
 impl From<bcrypt::BcryptError> for AppError {
     fn from(error: bcrypt::BcryptError) -> Self {
-        eprintln!("Bcrypt error {:?}", error);
+        tracing::error!("Bcrypt error {:?}", error);
         AppError::InternalServerError
     }
 }
 
 impl From<jsonwebtoken::errors::Error> for AppError {
     fn from(error: jsonwebtoken::errors::Error) -> Self {
-        eprintln!("Jwt error {:?}", error);
+        tracing::error!("Jwt error {:?}", error);
         AppError::InternalServerError
     }
 }
