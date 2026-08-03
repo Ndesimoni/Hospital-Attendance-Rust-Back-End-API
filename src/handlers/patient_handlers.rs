@@ -98,7 +98,6 @@ pub async fn login_after_otp_verification(
     State(state): State<AppState>,
     Json(payload): Json<OtpVerification>,
 ) -> Result<Json<LoginResponse>, AppError> {
-    println!("handler is working good",);
     let token = state.otp_service.verify_otp_service(payload).await?;
 
     Ok(Json(token))

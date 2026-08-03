@@ -1,15 +1,5 @@
-use std::ffi::CStr;
-
-use axum::{
-    extract::{Request, rejection::JsonSyntaxError},
-    http::StatusCode,
-    middleware::Next,
-    response::Response,
-};
 use chrono::{Duration, Utc};
 use jsonwebtoken::{DecodingKey, EncodingKey, Header, Validation, decode, encode};
-
-use serde::{Deserialize, Serialize};
 
 use crate::models::{AppError, Claims, Roles};
 

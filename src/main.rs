@@ -130,6 +130,7 @@ async fn main() {
     let receptionist_routes = Router::new()
         .route("/patients", post(create_patients))
         .route("/patients", get(get_all_patients))
+        .route("/visits", get(get_all_visits))
         .route("/patients/{id}", put(update_patients_detail))
         .route("/patients/{id}/visits", post(create_visit))
         .layer(middleware::from_fn(require_receptionist))
@@ -169,11 +170,14 @@ async fn main() {
         .nest("/doctor", doctor_routes)
         .with_state(app_state);
 
-    let listener = tokio::net::TcpListener::bind("127.0.0.1:4000")
-        .await
-        .unwrap();
+    let host = std::env::var("APP_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
+    let port = std::env::var("APP_PORT").unwrap_or_else(|_| "4000".to_string());
 
-    println!("Server started on http://127.0.0.1:4000");
+    let address = std::format!("{}:{}", host, port);
+
+    let listener = tokio::net::TcpListener::bind(&address).await.unwrap();
+
+    println!("Server started on http://{}", address);
 
     axum::serve(listener, app).await.unwrap();
 }

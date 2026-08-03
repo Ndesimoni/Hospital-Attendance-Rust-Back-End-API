@@ -1,7 +1,7 @@
 use std::fmt;
 
 use serde::{Deserialize, Serialize};
-use sqlx::Type;
+
 use validator::Validate;
 
 use crate::validation::validate_password;
