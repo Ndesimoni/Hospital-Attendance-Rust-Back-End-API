@@ -1,6 +1,7 @@
 use std::sync::Arc;
 
 use bcrypt::{DEFAULT_COST, hash, verify};
+use redis::ConnectionInfo;
 
 use crate::{
     middleware::jwt::create_token,

@@ -1,6 +1,8 @@
+use std::net::SocketAddr;
+
 use axum::{
     Json,
-    extract::{Path, Query, State},
+    extract::{ConnectInfo, Path, Query, State},
 };
 
 use validator::Validate;
@@ -97,8 +99,15 @@ pub async fn patient_login(
 pub async fn login_after_otp_verification(
     State(state): State<AppState>,
     Json(payload): Json<OtpVerification>,
+    // ConnectInfo(addr): ConnectInfo<SocketAddr>,
 ) -> Result<Json<LoginResponse>, AppError> {
-    let token = state.otp_service.verify_otp_service(payload).await?;
+    // let ip_addr = addr.ip();
+
+    let token = state
+        .otp_service
+        //  .verify_otp_service(payload, ip_addr)
+        .verify_otp_service(payload)
+        .await?;
 
     Ok(Json(token))
 }

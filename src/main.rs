@@ -3,34 +3,35 @@ use axum::{
     routing::{get, post, put},
 };
 
-use std::sync::Arc;
+use std::{net::SocketAddr, sync::Arc};
 
 use task_flow_api::{
     db::create_pool,
     handlers::{
         auth_handler, create_patients, create_user, create_visit, get_all_patients, get_all_user,
         get_all_visits, get_patient_visit, get_patients_by_id, health_check, login,
-        login_after_otp_verification, patient_login, update_patients_detail, update_user,
-        update_visit,
+        login_after_otp_verification, patient_login, redis_health, update_patients_detail,
+        update_user, update_visit,
     },
     middleware::{
         auth::auth_middleware,
         require_doctor,
         role::{require_admin, require_receptionist},
     },
+    models::AppError,
+    redis::create_redis_connection,
     repositories::{
-        auth_repository::AuthRepository, patient_otp_repository::PatientOtpRepository,
-        patient_repository::PatientRepository, postgres_auth_repository::PostgresAuthRepository,
-        postgres_patient_otp_repository::PostgresPatientOtpRepository,
+        auth_repository::AuthRepository, patient_repository::PatientRepository,
+        postgres_auth_repository::PostgresAuthRepository,
         postgres_patient_repository::PostgresPatientRepository,
         postgres_user_role_repository::PostgresUserRoleRepository,
         postgres_visit_repository::PostgresVisitRepository,
         user_role_repository::UserRoleRepository, visit_repository::VisitRepository,
     },
     services::{
-        auth_service::AuthService, patient_opt_service::PatientOtpService,
-        patient_service::PatientService, user_role_service::UserRoleServices,
-        visit_service::VisitService,
+        auth_service::AuthService, patient_otp_service::PatientOtpService,
+        patient_service::PatientService, redis_services::RedisService,
+        user_role_service::UserRoleServices, visit_service::VisitService,
     },
     state::AppState,
 };
@@ -38,11 +39,19 @@ use task_flow_api::{
 ////////////////////////////////////////////////
 
 #[tokio::main]
-async fn main() {
+async fn main() -> Result<(), AppError> {
     dotenvy::dotenv().ok();
 
     let pool = create_pool().await;
     let jwt_secret = std::env::var("JWT_SECRET").expect("JWT_SECRET must be set");
+
+    //* this is redis connection */
+    let redis_url = std::env::var("REDIS_URL").expect("REDIS_URL missing");
+    let redis = create_redis_connection(&redis_url).await.map_err(|e| {
+        println!("Redis connection failed: {:?}", e);
+        e
+    })?;
+    let redis_service = Arc::new(RedisService::new(redis));
 
     //*for working with patients data
     let patient_repository = Arc::new(PostgresPatientRepository::new(pool.clone()));
@@ -83,12 +92,12 @@ async fn main() {
 
     ////////////////////////////////////////////////////
     //* for working with patient login */
-    let patient_opt_repository = Arc::new(PostgresPatientOtpRepository::new(pool.clone()));
+    // let patient_opt_repository = Arc::new(PostgresPatientOtpRepository::new(pool.clone()));
 
-    let otp_service: Arc<dyn PatientOtpRepository> = patient_opt_repository;
+    // let otp_service: Arc<dyn PatientOtpRepository> = patient_opt_repository;
 
     let otp_service = Arc::new(PatientOtpService::new(
-        otp_service,
+        redis_service.clone(),
         patient_repository,
         jwt_secret.clone(),
     ));
@@ -103,10 +112,12 @@ async fn main() {
         jwt_secret,
         role_service,
         otp_service,
+        redis_service,
     };
 
     //*health check route  */
     let health_check = Router::new().route("/health", get(health_check));
+    let redis_health = Router::new().route("/redis", get(redis_health));
 
     //*public routes */
     //user public routes
@@ -116,7 +127,7 @@ async fn main() {
 
     //patients public routes
     let patient_public_routes = Router::new().route("/login", post(patient_login));
-    let patient_log_after_otp_verification =
+    let patient_log_after_verify_otp =
         Router::new().route("/verify-otp", post(login_after_otp_verification));
 
     //* routes for all authenticated users */
@@ -167,8 +178,9 @@ async fn main() {
     let app = Router::new()
         .merge(public_routes)
         .merge(health_check)
+        .merge(redis_health)
         .nest("/patients", patient_public_routes)
-        .nest("/patients", patient_log_after_otp_verification)
+        .nest("/patients", patient_log_after_verify_otp)
         .nest("/authenticate", authenticated_routes)
         .nest("/admin", admin_route)
         .nest("/reception", receptionist_routes)
@@ -182,7 +194,28 @@ async fn main() {
 
     let listener = tokio::net::TcpListener::bind(&address).await.unwrap();
 
-    tracing::info!("Server started on http://{}", address);
+    println!("Server started on http://{}", address);
 
-    axum::serve(listener, app).await.unwrap();
+    axum::serve(
+        listener,
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    )
+    .await
+    .unwrap();
+  Ok(())
+
+    // let listener = tokio::net::TcpListener::bind("0.0.0.0:4000")
+    //     .await
+    //     .map_err(|_| AppError::InternalServerError)?;
+
+    //  println!("Server started on http://{}", address);
+
+    // axum::serve(
+    //     listener,
+    //     app.into_make_service_with_connect_info::<SocketAddr>(),
+    // )
+    // .await
+    // .map_err(|_| AppError::InternalServerError)?;
+
+
 }

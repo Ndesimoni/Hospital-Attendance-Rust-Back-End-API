@@ -25,7 +25,6 @@ pub struct PatientOtpRequest {
 #[derive(Debug, Serialize)]
 pub struct OtpResponse {
     pub otp: String,
-    pub expires_at: NaiveDateTime,
 }
 
 //* otp verification body struct*/

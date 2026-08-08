@@ -1,5 +1,17 @@
 {
   "editor.formatOnSave": true,
+  "editor.formatOnSaveMode": "modifications",
+  "editor.defaultFormatter": "rust-lang.rust-analyzer",
+  "editor.formatOnSaveTimeout": 2000,
+  "[rust]": {
+    "editor.defaultFormatter": "rust-lang.rust-analyzer",
+    "editor.formatOnSave": true
+  },
+  "rust-analyzer.checkOnSave.enable": false,
+  "rust-analyzer.rustfmt.extraArgs": []
+}
+{
+  "editor.formatOnSave": true,
   "editor.formatOnSaveMode": "file",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,

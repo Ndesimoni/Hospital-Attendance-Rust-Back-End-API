@@ -22,6 +22,13 @@ services:
       timeout: 5s
       retries: 5
 
+  redis:
+    image: redis:7-alpine
+    container_name: task_flow_redis
+    restart: always
+
+    ports:
+      - "6379:6379"
 
   api:
     build: .
@@ -34,13 +41,16 @@ services:
     environment:
       APP_HOST: ${APP_HOST}
       APP_PORT: ${APP_PORT}
-      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_URL: postgres://postgres:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      REDIS_URL: redis://redis:6379
       JWT_SECRET: ${JWT_SECRET}
       RUST_LOG: ${RUST_LOG}
 
     depends_on:
-       postgres:
-         condition: service_healthy
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
 
 
 volumes:

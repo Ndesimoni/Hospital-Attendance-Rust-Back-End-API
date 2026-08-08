@@ -3,6 +3,7 @@ pub mod errors;
 pub mod handlers;
 pub mod middleware;
 pub mod models;
+pub mod redis;
 pub mod repositories;
 pub mod services;
 pub mod state;
